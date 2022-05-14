@@ -1,9 +1,8 @@
 #!/bin/bash
 
-FIREFOX_DIR="/opt"
+FIREFOX_DIR="/opt/firefox"
 SYMLINK_PATH="/usr/local/bin/firefox"
 DOWNLOAD_DIR="releases"
-SHORTCUT_PATH="/usr/local/share/applications"
 OS="linux64"
 LANGUAGE="en-US"
 
@@ -19,18 +18,20 @@ wget --trust-server-names "https://download.mozilla.org/?product=firefox-latest&
 
 ARCHIVE=$(ls -1t | head -n 1)
 
-echo "Updating $FIREFOX_DIR with contents from $ARCHIVE, press enter to start..."
+echo "Replacing $FIREFOX_DIR with contents from $ARCHIVE"
+echo "Press enter to start..."
 read
 
 echo "Extracting..."
 tar xjf $ARCHIVE
 
 echo "Moving (sudo) firefox to $FIREFOX_DIR..."
+sudo rm $FIREFOX_DIR -rf
 sudo mv firefox $FIREFOX_DIR
 
 echo "Creating symlink $SYMLINK_PATH -> $FIREFOX_DIR/firefox/firefox"
-sudo ln -s $FIREFOX_DIR/firefox/firefox $SYMLINK_PATH
+sudo ln -s $FIREFOX_DIR/firefox $SYMLINK_PATH
 
-echo "Downloading .desktop file to $SHORTCUT_PATH"
+echo "Downloading .desktop file"
 wget --trust-server-names "https://raw.githubusercontent.com/mozilla/sumo-kb/main/install-firefox-linux/firefox.desktop"
-sudo mv firefox.desktop $SHORTCUT_PATH
+mv firefox.desktop ..
